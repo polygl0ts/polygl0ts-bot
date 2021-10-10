@@ -6,5 +6,11 @@
         "captcha_length": 32,
         "role": "member",
         "guild_id": <ADD GUILD ID HERE>
+    },
+    "email": {
+        "smtp_host": <ADD HOST HERE>,
+        "smtp_port": <ADD PORT HERE>,
+        "username": <ADD USERNAME HERE>,
+        "password": <ADD PASSWORD HERE>
     }
 }

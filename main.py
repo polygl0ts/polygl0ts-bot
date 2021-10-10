@@ -3,15 +3,16 @@ import re
 import requests
 from discord.ext import commands
 
-import config, captcha, constants
+import config, captcha, constants, spam
 
 intents = discord.Intents.default()
 intents.members = True
 bot = commands.Bot(command_prefix="!", help_command=None, intents=intents)
 
-#==================
+# ==================
 # Helpers
-#==================
+# ==================
+
 
 async def add_member_role(bot, user_id):
     guild = bot.get_guild(config.user_verification.guild_id)
@@ -20,51 +21,65 @@ async def add_member_role(bot, user_id):
         [r for r in guild.roles if r.name == config.user_verification.role][0]
     )
 
-#==================
+
+# ==================
 # Events handling
-#==================
+# ==================
+
 
 @bot.event
 async def on_ready():
     print("We have logged in as {0.user}".format(bot))
 
+
 @bot.event
 async def on_member_join(member):
     await member.send(constants.help_message)
+
 
 @bot.event
 async def on_command_error(ctx, error):
     if isinstance(error, commands.MissingRequiredArgument):
         await ctx.send(constants.help_message)
     else:
-        welpwuat = requests.get('http://whatthecommit.com/index.txt').text.strip()
+        welpwuat = requests.get("http://whatthecommit.com/index.txt").text.strip()
         await ctx.send(welpwuat)
 
-#==================
+
+# ==================
 # Commands
-#==================
+# ==================
+
 
 @bot.command()
 async def help(ctx):
     await ctx.send(constants.help_message)
 
+
 @bot.command()
-async def email(ctx, email : str):
-    r = r'[a-z]*.[a-z]*@epfl.ch'
+async def email(ctx, email: str):
+    r = r"[a-z]*.[a-z]*@epfl.ch"
     if re.match(r, email):
         code = captcha.generate_captcha(ctx.author.id)
-        await ctx.send(f'Here is your verification code: {code}')
+        # Send the verification code via email
+        if spam.send_mail(email, code):
+            await ctx.send("Check your email inbox for the verification code!")
+        else:
+            await ctx.send(
+                "Sending the email failed. Are you sure your mail address is correct?"
+            )
     else:
-        await ctx.send('This doesn\'t look like an EPFL email address to me...')
+        await ctx.send("This doesn't look like an EPFL email address to me...")
+
 
 @bot.command()
 async def verify(ctx, code: str):
     if captcha.validate_captcha(ctx.author.id, code):
-        await ctx.send('Such member, much wow!')
+        await ctx.send("Such member, much wow!")
         await add_member_role(ctx.bot, ctx.author.id)
     else:
-        await ctx.send('Sorry, it looks like your code is invalid/expired.')
+        await ctx.send("Sorry, it looks like your code is invalid/expired.")
+
 
 if __name__ == "__main__":
     bot.run(config.discord.token)
-
