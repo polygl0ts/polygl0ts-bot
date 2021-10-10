@@ -6,6 +6,7 @@ name = "pypi"
 [packages]
 discord-py = "*"
 typing-extensions = "*"
+discord-py-slash-command = "*"
 
 [dev-packages]
 
