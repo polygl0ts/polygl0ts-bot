@@ -1,0 +1,9 @@
+{
+    "discord": {
+        "token": <ADD SECRET HERE>
+    },
+    "user_verification": {
+        "role": "member",
+        "guild_id": <ADD GUILD ID HERE>
+    }
+}
