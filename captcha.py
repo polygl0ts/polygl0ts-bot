@@ -19,4 +19,13 @@ def generate_captcha(user_id):
 
 def validate_captcha(user_id, user_captcha):
     cleaned_captcha = str(user_captcha).strip()
-    return captchas.pop(user_id, "") == cleaned_captcha
+
+    saved_captcha = captchas.get(user_id, "")
+
+    if saved_captcha == cleaned_captcha:
+        # Remove the captcha upon successful verification
+        del captchas[user_id]
+        return True
+    else:
+        # Don't remove the captcha from the dict yet - give the user another chance :)
+        return False
