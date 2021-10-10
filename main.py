@@ -3,7 +3,7 @@ from discord.ext import commands
 from discord.utils import get
 import re
 
-import config
+import config, captcha
 
 
 # Create bot

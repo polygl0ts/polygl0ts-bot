@@ -3,6 +3,7 @@
         "token": <ADD SECRET HERE>
     },
     "user_verification": {
+        "captcha_length": 32,
         "role": "member",
         "guild_id": <ADD GUILD ID HERE>
     }
