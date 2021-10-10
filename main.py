@@ -3,55 +3,42 @@ from discord.ext import commands
 import re
 from discord.utils import get
 
-from env import TOKEN
+import config
 
-test_guild = 893145160207179866
-member_role = 893551265043345429
 
-# Create connection to discord
-
+# Create bot
 intents = discord.Intents.default()
 intents.members = True
 bot = commands.Bot(command_prefix='!', intents=intents)
 
-
+# Connect bot
 @bot.event
 async def on_ready():
     print('We have logged in as {0.user}'.format(bot))
 
-# When someone enter the discord, send him a message
+# When someone enters the discord, send him a message
 @bot.event
 async def on_member_join(member):
     print('someone joined!')
     await member.send('Hello there!')
 
-@bot.event
-async def on_message(message):
-    if message.author == bot.user:
-        return
+# Helper to add member role
+async def add_member_role(bot, user_id):
+    guild = bot.get_guild(config.user_verification.guild_id)
+    member = await(guild.fetch_member(user_id))
+    await member.add_roles([r for r in guild.roles if r.name == config.user_verification.role][0])
 
-    s = message.content.strip()
-    r = r'[a-z]*.[a-z]*@epfl.ch'
+# Verify command
+@bot.command()
+async def verify(ctx, checksum : str):
+    # if captcha.validate_answer(ctx.author.id, checksum):
+    await ctx.send("That looks correct.\nCome on in!")
+    await add_member_role(ctx.bot, ctx.author.id)
+    # else:
+    #     await ctx.send("That doesn't look correct.\n" + captcha.get_instructions(ctx.author.id))
 
-    # TODO: check if already member
-    response = ''
-    if re.match(r, s):
-        response = 'Perfect!\n'
-        response += f'I\'m sending a verification code to this email: *{s}*\n\n'
-        response += 'Send me that code to get the member role ;)'
-
-        guild = bot.get_guild(test_guild)
-        role = get(guild.roles, id=member_role)
-        print(guild.members)
-        member = guild.get_member(message.author.id)
-        member.add_roles(role)
-    else:
-        response = "If you want to become a member of polygl0ts, send me you epfl email address."
-
-    # TODO: generate code, send and verify it
+if __name__ == "__main__":
+    # api.run_api(bot)
+    bot.run(config.discord.token)
 
 
-
-    await message.channel.send(response)
-
-bot.run(TOKEN)

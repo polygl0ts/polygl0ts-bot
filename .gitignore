@@ -159,4 +159,4 @@ cython_debug/
 
 # End of https://www.toptal.com/developers/gitignore/api/linux,python
 
-env.py
+config.json
