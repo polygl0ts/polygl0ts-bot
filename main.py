@@ -1,35 +1,52 @@
 import discord
-import discord_slash
-from discord.ext import commands
-from discord.utils import get
-
 import re
+import requests
+from discord.ext import commands
 
-import config, captcha
+import config, captcha, constants
 
-# Create bot
 intents = discord.Intents.default()
 intents.members = True
-bot = commands.Bot(command_prefix="!", intents=intents)
+bot = commands.Bot(command_prefix="!", help_command=None, intents=intents)
 
-# Connect bot
-@bot.event
-async def on_ready():
-    print("We have logged in as {0.user}".format(bot))
+#==================
+# Helpers
+#==================
 
-# When someone enters the discord, send him a message
-@bot.event
-async def on_member_join(member):
-    print("someone joined!")
-    await member.send("Hello there!")
-
-# Helper to add member role
 async def add_member_role(bot, user_id):
     guild = bot.get_guild(config.user_verification.guild_id)
     member = await (guild.fetch_member(user_id))
     await member.add_roles(
         [r for r in guild.roles if r.name == config.user_verification.role][0]
     )
+
+#==================
+# Events handling
+#==================
+
+@bot.event
+async def on_ready():
+    print("We have logged in as {0.user}".format(bot))
+
+@bot.event
+async def on_member_join(member):
+    await member.send(constants.help_message)
+
+@bot.event
+async def on_command_error(ctx, error):
+    if isinstance(error, commands.MissingRequiredArgument):
+        await ctx.send(constants.help_message)
+    else:
+        welpwuat = requests.get('http://whatthecommit.com/index.txt').text.strip()
+        await ctx.send(welpwuat)
+
+#==================
+# Commands
+#==================
+
+@bot.command()
+async def help(ctx):
+    await ctx.send(constants.help_message)
 
 @bot.command()
 async def email(ctx, email : str):
@@ -47,7 +64,6 @@ async def verify(ctx, code: str):
         await add_member_role(ctx.bot, ctx.author.id)
     else:
         await ctx.send('Sorry, it looks like your code is invalid/expired.')
-
 
 if __name__ == "__main__":
     bot.run(config.discord.token)
