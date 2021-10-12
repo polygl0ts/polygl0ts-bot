@@ -80,7 +80,7 @@ async def email(ctx, email: str):
 @bot.command()
 async def verify(ctx, code: str):
     if captcha.validate_captcha(ctx.author.id, code):
-        await ctx.send("Such member, much wow!")
+        await ctx.send("Such member, much wow!\nCheck out the channel #member-101 to get started!")
         await add_member_role(ctx.bot, ctx.author.id)
         await member_log(ctx.bot, f'{ctx.author.mention} validated is verification code.')
     else:
