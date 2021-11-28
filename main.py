@@ -21,6 +21,7 @@ async def add_member_role(bot, user_id):
         [r for r in guild.roles if r.name == config.user_verification.role][0]
     )
 
+
 async def member_log(bot, text):
     channel = bot.get_channel(config.user_verification.log_channel_id)
     await channel.send(text)
@@ -68,7 +69,9 @@ async def email(ctx, email: str):
         # Send the verification code via email
         if spam.send_mail(email, code):
             await ctx.send("Check your email inbox for the verification code!")
-            await member_log(ctx.bot, f'{ctx.author.mention} required a verification code.')
+            await member_log(
+                ctx.bot, f"{ctx.author.mention} requested a verification code."
+            )
         else:
             await ctx.send(
                 "Sending the email failed. Are you sure your mail address is correct?"
@@ -80,12 +83,16 @@ async def email(ctx, email: str):
 @bot.command()
 async def verify(ctx, code: str):
     if captcha.validate_captcha(ctx.author.id, code):
-        await ctx.send("Such member, much wow!\nCheck out the channel #member-101 to get started!")
+        await ctx.send(
+            "Such member, much wow!\nCheck out the channel #member-101 to get started!"
+        )
         await add_member_role(ctx.bot, ctx.author.id)
-        await member_log(ctx.bot, f'{ctx.author.mention} validated is verification code.')
+        await member_log(
+            ctx.bot, f"{ctx.author.mention} validated their verification code."
+        )
     else:
         await ctx.send("Sorry, it looks like your code is invalid/expired.")
-        await member_log(ctx.bot, f'{ctx.author.mention} invalid code.')
+        await member_log(ctx.bot, f"{ctx.author.mention} entered an invalid code.")
 
 
 if __name__ == "__main__":
