@@ -4,6 +4,7 @@ This is the polybot - the Discord bot for the [polygl0ts Discord server](https:/
 
 It is very powerful.
 Never mess with our bot!
+(And if you do, please follow responsible disclosure principles!)
 
 ## Running the bot
 
