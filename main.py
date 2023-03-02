@@ -63,7 +63,8 @@ async def help(ctx):
 
 @bot.command()
 async def email(ctx, email: str):
-    r = r"^[a-z]+\.[a-z]+@epfl\.ch$"
+    # Looks a bit fucky but works, I swear
+    r = r"^[a-z]+(-[a-z]+)?\.[a-z]+(-[a-z]+)?@epfl\.ch$"
     if re.match(r, email):
         code = captcha.generate_captcha(ctx.author.id)
         # Send the verification code via email
