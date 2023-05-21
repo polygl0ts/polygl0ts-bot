@@ -1,6 +1,6 @@
 services:
   bot:
-    image: polygl0ts-bot:latest
+    image: ghcr.io/polygl0ts/polygl0ts-bot:main
     build: .
     volumes:
       - ./config.json:/bot/config.json:ro
