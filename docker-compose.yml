@@ -1,8 +1,0 @@
-version: "3.9"
-services:
-  bot:
-    image: polygl0ts-bot
-    build: .
-    volumes:
-      - ./config.json:/bot/config.json
-    container_name: polybot

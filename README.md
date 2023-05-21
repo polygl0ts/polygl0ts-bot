@@ -12,7 +12,7 @@ You can just call `python3 main.py` after you've installed the requirements via 
 environment via `pipenv shell`.
 
 However, we suggest using the provided Dockerfile for a reproducible build and runtime environment.
-Just call `docker-compose build` and `docker-compose up` and you're ready to go!
+Just call `docker compose build` and `docker compose up` and you're ready to go!
 Don't forget to create a `config.json`, though.
 The provided example file can act as a reference!
 

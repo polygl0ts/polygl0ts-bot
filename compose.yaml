@@ -1,0 +1,7 @@
+services:
+  bot:
+    image: polygl0ts-bot:latest
+    build: .
+    volumes:
+      - ./config.json:/bot/config.json:ro
+    container_name: polybot
