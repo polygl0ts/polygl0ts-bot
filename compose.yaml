@@ -5,3 +5,4 @@ services:
     volumes:
       - ./config.json:/bot/config.json:ro
     container_name: polybot
+    init: true
