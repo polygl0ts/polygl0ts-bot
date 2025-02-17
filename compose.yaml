@@ -2,6 +2,7 @@ services:
   bot:
     image: ghcr.io/polygl0ts/polygl0ts-bot:main
     build: .
+    restart: unless-stopped
     volumes:
       - ./config.json:/bot/config.json:ro
     container_name: polybot
