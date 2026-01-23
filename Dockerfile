@@ -1,5 +1,5 @@
 # syntax=docker/dockerfile:latest
-FROM python:3.12-alpine
+FROM docker.io/python:3.12-alpine
 
 WORKDIR /bot
 
